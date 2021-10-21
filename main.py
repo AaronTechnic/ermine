@@ -176,7 +176,7 @@ async def mute(ctx, member: discord.Member):
         await member.add_roles(mutedrole, reason=None, atomic=True)
         await ctx.send(":white_check_mark: {member} has been muted!")
     except:
-        await ctx.send("**PRO TIP:** As that user has been muted, you can unmute them my executing `/unmute`.")
+        await ctx.send("**PRO TIP:** As that user has been muted, you can unmute them my executing `e!unmute`.")
 
 @mute.error
 async def mute_error(ctx, error):
