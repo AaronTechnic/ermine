@@ -42,7 +42,7 @@ async def serverinfo(self,ctx):
     nbr_text=len(ctx.guild.text_channels)
     nbr_vc=len(ctx.guild.voice_channels)
     created = ctx.guild.created_at
-    embed=discord.Embed(title=f"{ctx.guild.name}",color=random.randint(0, 0xffffff))
+    embed=discord.Embed(title=f"{ctx.guild.name}",color=discord.Colour.red)
     embed.set_thumbnail(url=f"{ctx.guild.icon_url}")
     embed.add_field(name="Server created on", value=f"{created.strftime('%Y-%m-%d')}", inline=True)
     embed.add_field(name="Text Channels", value=f"{nbr_text}", inline=True)
@@ -58,7 +58,7 @@ async def userinfo(ctx, member: discord.Member = None):
     if not member:  
         member = ctx.message.author
     roles = [role for role in member.roles]
-    embed = discord.Embed(colour=discord.Colour.blue(), timestamp=ctx.message.created_at,
+    embed = discord.Embed(colour=discord.Colour.red(), timestamp=ctx.message.created_at,
                           title=f"User Info - {member}")
     embed.set_thumbnail(url=member.avatar_url)
     embed.set_footer(text=f"Requested by {ctx.author}")
@@ -83,7 +83,7 @@ async def on_command_error(ctx, error):
 async def avatar(ctx, member: discord.Member = None):
     if not member:
         member = ctx.message.author
-    embed = discord.Embed(colour=discord.Colour.blue(), timestamp=ctx.message.created_at,
+    embed = discord.Embed(colour=discord.Colour.red(), timestamp=ctx.message.created_at,
                           title=f"Avatar of {member}")
     embed.set_image(url=member.avatar_url)
     await ctx.send(embed=embed)
