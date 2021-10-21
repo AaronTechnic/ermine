@@ -9,7 +9,7 @@ from discord.ext import *
 from time import *
 
 
-client = commands.Bot(command_prefix=".") # Init the client
+client = commands.Bot(command_prefix="/") # Init the client
 client.remove_command('help') # Remove the existing help command with a better one.
 
 # Start
@@ -21,7 +21,7 @@ async def on_connect():
 @client.event
 async def on_ready():
     await client.change_presence(status=discord.Status.online,
-    activity=discord.Game(f'.help | {len(client.guilds)} guilds'))
+    activity=discord.Game(f'/help | {len(client.guilds)} servers'))
     print('Connected.')
 
 @client.event
@@ -34,7 +34,7 @@ async def on_disconnect():
 
 @client.command() # Ping command
 async def ping(ctx):
-    await ctx.send(f':ping_pong: **Pong!** Client ping latency is **{round(client.latency * 1000)}ms**')
+    await ctx.send(f':ping_pong: Client latency is **{round(client.latency * 1000)}ms**')
 
 @commands.command(aliases=['server-info','guild-info','server'])
 async def serverinfo(self,ctx):
@@ -44,9 +44,9 @@ async def serverinfo(self,ctx):
     created = ctx.guild.created_at
     embed=discord.Embed(title=f"{ctx.guild.name}",color=random.randint(0, 0xffffff))
     embed.set_thumbnail(url=f"{ctx.guild.icon_url}")
-    embed.add_field(name="Server created", value=f"{created.strftime('%Y-%m-%d')}", inline=True)
+    embed.add_field(name="Server created on", value=f"{created.strftime('%Y-%m-%d')}", inline=True)
     embed.add_field(name="Text Channels", value=f"{nbr_text}", inline=True)
-    embed.add_field(name="ID", value=f"{ctx.guild.id}", inline=True)
+    embed.add_field(name="Identity", value=f"{ctx.guild.id}", inline=True)
     embed.add_field(name="Voice Channels", value=f'{nbr_vc}', inline=True)
     embed.add_field(name="Owner",value=f'{ctx.guild.owner}', inline=True)
     embed.add_field(name="Members",value=f'{nbr_member}', inline=True)
@@ -98,7 +98,7 @@ async def invite(ctx):
 
 @client.command()
 async def code(ctx):
-    await ctx.send("https://github.com/tuxedlinux/Neon/")
+    await ctx.send("https://github.com/AaronTechnic/ermine")
 
 @client.command() # "Say" command
 async def say(ctx, *, msg):
@@ -126,7 +126,7 @@ async def kick_error(ctx, error):
     if isinstance(error, MissingPermissions):
         await ctx.send(":x: You do not have permission to kick users.")
     if isinstance(error, MissingRequiredArgument):
-        await ctx.send(":x: You must mention a user to kick.")
+        await ctx.send(":x: You must mention a user to kick!")
 
 
 @client.command() # Ban command
@@ -144,7 +144,7 @@ async def ban_error(ctx, error):
     if isinstance(error, MissingPermissions):
         await ctx.send(":x: You do not have permission to ban users.")
     if isinstance(error, MissingRequiredArgument):
-        await ctx.send(":x: You must mention a user to ban.")
+        await ctx.send(":x: You must mention a user to ban!")
 
 @client.command() # Unban command
 @commands.has_permissions(administrator = True)
@@ -165,7 +165,7 @@ async def unban_error(ctx, error):
     if isinstance(error, MissingPermissions):
         await ctx.send(":x: You do not have permission to unban users.")
     if isinstance(error, MissingRequiredArgument):
-        await ctx.send(":x: You must mention a user to revoke a ban.")
+        await ctx.send(":x: You must mention a user to revoke a ban!")
 
 @client.command()
 @has_permissions(manage_roles = True)
@@ -176,14 +176,14 @@ async def mute(ctx, member: discord.Member):
         await member.add_roles(mutedrole, reason=None, atomic=True)
         await ctx.send(":white_check_mark: {member} has been muted!")
     except:
-        await ctx.send("As that user has been muted, you can unmute them my executing `.unmute`.")
+        await ctx.send("**PRO TIP:** As that user has been muted, you can unmute them my executing `/unmute`.")
 
 @mute.error
 async def mute_error(ctx, error):
     if isinstance(error, MissingPermissions):
-        await ctx.send("You don't have permission to mute people.")
+        await ctx.send(":x: You don't have permission to mute people.")
     if isinstance(error, MissingRequiredArgument):
-            await ctx.send("Can you please tell me who to mute?")
+            await ctx.send(":x: You must mention a user to mute!")
 
 
 @client.command() # Unmute command
@@ -197,15 +197,15 @@ async def unmute(ctx, member: discord.Member):
 @unmute.error
 async def unmute_error(ctx, error):
     if isinstance(error, MissingPermissions):
-        await ctx.send(":x: You do not have permission to unmute users.")
+        await ctx.send(":x: You do not have permission to revoke mutes.")
     if isinstance(error, MissingRequiredArgument):
-            await ctx.send(":x: You must mention a user to unmute.")
+            await ctx.send(":x: You must mention a user to revoke mutes!")
 
 @client.command(aliases=["rm"])
 @has_permissions(manage_messages=True)
 async def purge(ctx, amount : int):
     await ctx.channel.purge(limit=amount+1)
-    sent = await ctx.send(F":white_check_mark: Deleted **{amount}** messages.")
+    sent = await ctx.send(F":white_check_mark: Deleted **{amount}** messages!")
     sleep(1)
     await sent.delete()
 
@@ -214,30 +214,30 @@ async def purge(ctx, amount : int):
 @client.command()
 async def help(ctx):
     await ctx.send('''
-```
-Commands List | Neon
-```
-*Common commands:*
-```
+**Commands List**
+
+*I will update this ugly help menu soon, it looks terrible :/*
+    
+***Common commands:***
+
+**
 .ping
 .avatar [member]
 .userinfo [member]
 .say [text]
 .kill [member]
 .invite
-```
-*Moderation commands:*
-```
+**
+
+***Moderation commands:***
+**
 .ban [member] (optional reason)
 .unban [member]
 .kick [member] (optional reason)
 .mute [member] (optional reason)
 .unmute [member]
 .purge [amount]
-```
-
-Join the Discord server for support and questions:
-https://discord.gg/MBgjh7VPNX
+**
 ''')
 
 # Bot token
