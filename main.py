@@ -9,7 +9,7 @@ from discord.ext import *
 from time import *
 
 
-client = commands.Bot(command_prefix="/") # Init the client
+client = commands.Bot(command_prefix="e!") # Init the client
 client.remove_command('help') # Remove the existing help command with a better one.
 
 # Start
@@ -21,7 +21,7 @@ async def on_connect():
 @client.event
 async def on_ready():
     await client.change_presence(status=discord.Status.online,
-    activity=discord.Game(f'/help | {len(client.guilds)} servers'))
+    activity=discord.Game(f'e!help | {len(client.guilds)} servers'))
     print('Connected.')
 
 @client.event
@@ -221,22 +221,22 @@ async def help(ctx):
 ***Common commands:***
 
 **
-.ping
-.avatar [member]
-.userinfo [member]
-.say [text]
-.kill [member]
-.invite
+e!ping
+e!avatar [member]
+e!userinfo [member]
+e!say [text]
+e!kill [member]
+e!invite
 **
 
 ***Moderation commands:***
 **
-.ban [member] (optional reason)
-.unban [member]
-.kick [member] (optional reason)
-.mute [member] (optional reason)
-.unmute [member]
-.purge [amount]
+e!ban [member] (optional reason)
+e!unban [member]
+e!kick [member] (optional reason)
+e!mute [member] (optional reason)
+e!unmute [member]
+e!purge [amount]
 **
 ''')
 
