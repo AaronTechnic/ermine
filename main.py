@@ -21,7 +21,7 @@ async def on_connect():
 @client.event
 async def on_ready():
     await client.change_presence(status=discord.Status.online,
-    activity=discord.Game(f'e!help | {len(client.guilds)} servers'))
+    activity=discord.Game(f'e!help | Bot still in development'))
     print('Connected.')
 
 @client.event
