@@ -9,7 +9,7 @@ from discord.ext import *
 from time import *
 
 
-client = commands.Bot(command_prefix="e!") # Init the client
+client = commands.Bot(command_prefix="-") # Init the client
 client.remove_command('help') # Remove the existing help command with a better one.
 
 # Start
@@ -21,12 +21,12 @@ async def on_connect():
 @client.event
 async def on_ready():
     await client.change_presence(status=discord.Status.online,
-    activity=discord.Game(f'e!help | Bot still in development'))
+    activity=discord.Game(f'Installing Arch'))
     print('Connected.')
 
 @client.event
 async def on_disconnect():
-    print("Disconnected")
+    print("Disconnected!")
 
 # Stop
 
@@ -34,7 +34,7 @@ async def on_disconnect():
 
 @client.command() # Ping command
 async def ping(ctx):
-    await ctx.send(f':ping_pong: Client latency is **{round(client.latency * 1000)}ms**')
+    await ctx.send(f':ping_pong: Client latency is **{round(client.latency * 1000)}ms.**')
 
 @commands.command(aliases=['server-info','guild-info','server'])
 async def serverinfo(self,ctx):
@@ -75,9 +75,7 @@ async def userinfo(ctx, member: discord.Member = None):
 @client.event # Error handling for commands
 async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send(':x: Missing required arguments.')
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send(f":x: Sorry, {ctx.author.mention}, you do not have the required permissions to run this command.")
+        await ctx.send('Missing required arguments.')
 
 @client.command(aliases=["profilepic"])
 async def avatar(ctx, member: discord.Member = None):
@@ -86,6 +84,7 @@ async def avatar(ctx, member: discord.Member = None):
     embed = discord.Embed(colour=discord.Colour.red(), timestamp=ctx.message.created_at,
                           title=f"Avatar of {member}")
     embed.set_image(url=member.avatar_url)
+    embed.set_footer(text=f"Requested by {ctx.author}")
     await ctx.send(embed=embed)
 
 @client.command()
@@ -97,8 +96,8 @@ async def invite(ctx):
     await ctx.send("https://discord.com/api/oauth2/authorize?client_id=778576098195013662&permissions=8&scope=bot")
 
 @client.command()
-async def code(ctx):
-    await ctx.send("https://github.com/AaronTechnic/ermine")
+async def source(ctx):
+    await ctx.send("The source code is at GitHub: https://github.com/AaronTechnic/ermine")
 
 @client.command() # "Say" command
 async def say(ctx, *, msg):
@@ -108,7 +107,7 @@ async def say(ctx, *, msg):
 @say.error # Error handling for say
 async def say_error(ctx, error):
     if isinstance(error, MissingRequiredArgument):
-        await ctx.send("What do you want the bot to say?")
+        await ctx.send("You are missing the required arguments.")
 
 # Moderation
 
@@ -117,16 +116,16 @@ async def say_error(ctx, error):
 async def kick(ctx, member : discord.Member, *, reason=None):
     try:
         await member.kick(reason=reason)
-        await ctx.send(f":white_check_mark: {member} has been kicked.")
+        await ctx.send(f"{member} has been kicked.")
     except:
-        await ctx.send(":x: This user is a moderator and cannot be kicked.")
+        await ctx.send("This user is a moderator and cannot be kicked.")
 
 @kick.error # Error handling for kick
 async def kick_error(ctx, error):
     if isinstance(error, MissingPermissions):
-        await ctx.send(":x: You do not have permission to kick users.")
+        await ctx.send("You do not have permission to kick users.")
     if isinstance(error, MissingRequiredArgument):
-        await ctx.send(":x: You must mention a user to kick!")
+        await ctx.send("You must mention a user to kick.")
 
 
 @client.command() # Ban command
@@ -134,17 +133,17 @@ async def kick_error(ctx, error):
 async def ban(ctx, member : discord.Member, *, reason=None):
     try:
         await member.ban(reason=reason)
-        await ctx.send(f":white_check_mark: {member} has been banned.")
+        await ctx.send(f"{member} has been banned from this server.")
     except:
-        await ctx.send(":x: This user is a moderator and cannot be banned.")
+        await ctx.send("This user is a moderator and cannot be banned.")
 
 
 @ban.error # Error handling for ban
 async def ban_error(ctx, error):
     if isinstance(error, MissingPermissions):
-        await ctx.send(":x: You do not have permission to ban users.")
+        await ctx.send("You do not have permission to ban users.")
     if isinstance(error, MissingRequiredArgument):
-        await ctx.send(":x: You must mention a user to ban!")
+        await ctx.send("You must mention a user to ban.")
 
 @client.command() # Unban command
 @commands.has_permissions(administrator = True)
@@ -163,9 +162,9 @@ async def unban(ctx, *, member):
 @unban.error # Error handling for unban
 async def unban_error(ctx, error):
     if isinstance(error, MissingPermissions):
-        await ctx.send(":x: You do not have permission to unban users.")
+        await ctx.send("You do not have permission to unban users.")
     if isinstance(error, MissingRequiredArgument):
-        await ctx.send(":x: You must mention a user to revoke a ban!")
+        await ctx.send("You must mention a user to revoke a ban!")
 
 @client.command()
 @has_permissions(manage_roles = True)
@@ -174,16 +173,16 @@ async def mute(ctx, member: discord.Member):
     try:
         mutedrole = discord.utils.get(guild.roles, name='Muted')
         await member.add_roles(mutedrole, reason=None, atomic=True)
-        await ctx.send(":white_check_mark: {member} has been muted!")
+        await ctx.send("{member} has been muted!")
     except:
-        await ctx.send("**PRO TIP:** As that user has been muted, you can unmute them my executing `e!unmute`.")
+        await ctx.send("**TIP:** As that user has been muted, you can unmute them my executing `e!unmute`.")
 
 @mute.error
 async def mute_error(ctx, error):
     if isinstance(error, MissingPermissions):
-        await ctx.send(":x: You don't have permission to mute people.")
+        await ctx.send("You don't have permission to mute people.")
     if isinstance(error, MissingRequiredArgument):
-            await ctx.send(":x: You must mention a user to mute!")
+            await ctx.send("You must mention a user to mute!")
 
 
 @client.command() # Unmute command
@@ -192,20 +191,20 @@ async def unmute(ctx, member: discord.Member):
     guild = ctx.guild
     mutedrole = discord.utils.get(guild.roles, name='Muted')
     await member.remove_roles(mutedrole, reason=None, atomic=True)
-    await ctx.send(":white_check_mark: {member} has been unmuted!")
+    await ctx.send("{member} has been unmuted!")
 
 @unmute.error
 async def unmute_error(ctx, error):
     if isinstance(error, MissingPermissions):
-        await ctx.send(":x: You do not have permission to revoke mutes.")
+        await ctx.send("You do not have permission to revoke mutes.")
     if isinstance(error, MissingRequiredArgument):
-            await ctx.send(":x: You must mention a user to revoke mutes!")
+            await ctx.send("You must mention a user to revoke mutes!")
 
 @client.command(aliases=["rm"])
 @has_permissions(manage_messages=True)
 async def purge(ctx, amount : int):
     await ctx.channel.purge(limit=amount+1)
-    sent = await ctx.send(F":white_check_mark: Deleted **{amount}** messages!")
+    sent = await ctx.send(F"Deleted **{amount}** messages!")
     sleep(1)
     await sent.delete()
 
@@ -213,32 +212,16 @@ async def purge(ctx, amount : int):
 
 @client.command()
 async def help(ctx):
-    await ctx.send('''
-**Commands List**
-
-*I will update this ugly help menu soon, it looks terrible :/*
-    
-***Common commands:***
-
-**
-e!ping
-e!avatar [member]
-e!userinfo [member]
-e!say [text]
-e!kill [member]
-e!invite
-**
-
-***Moderation commands:***
-**
-e!ban [member] (optional reason)
-e!unban [member]
-e!kick [member] (optional reason)
-e!mute [member] (optional reason)
-e!unmute [member]
-e!purge [amount]
-**
-''')
+    embed=discord.Embed(title="Help menu in development.",color=discord.Colour.red)
+#    embed.set_thumbnail(url=f"{ctx.guild.icon_url}")
+#    embed.add_field(name="Server created on", value=f"{created.strftime('%Y-%m-%d')}", inline=True)
+#    embed.add_field(name="Text Channels", value=f"{nbr_text}", inline=True)
+#    embed.add_field(name="Identity", value=f"{ctx.guild.id}", inline=True)
+#    embed.add_field(name="Voice Channels", value=f'{nbr_vc}', inline=True)
+#    embed.add_field(name="Owner",value=f'{ctx.guild.owner}', inline=True)
+#    embed.add_field(name="Members",value=f'{nbr_member}', inline=True)
+#    embed.add_field(name=f'System Channel',value=f'{ctx.guild.system_channel}',inline=True)
+    await ctx.send(embed=embed)
 
 # Bot token
 
