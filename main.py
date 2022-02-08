@@ -72,11 +72,6 @@ async def userinfo(ctx, member: discord.Member = None):
     print(member.top_role.mention)
     await ctx.send(embed=embed)
 
-@client.event # Error handling for commands
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send('Missing required arguments.')
-
 @client.command(aliases=["profilepic"])
 async def avatar(ctx, member: discord.Member = None):
     if not member:
@@ -215,7 +210,7 @@ async def help(ctx):
     embed=discord.Embed(title="Help menu in development.",color=discord.Colour.red)
 #    embed.set_thumbnail(url=f"{ctx.guild.icon_url}")
 #    embed.add_field(name="Server created on", value=f"{created.strftime('%Y-%m-%d')}", inline=True)
-#    embed.add_field(name="Text Channels", value=f"{nbr_text}", inline=True)
+    embed.add_field(name="insert commands")
 #    embed.add_field(name="Identity", value=f"{ctx.guild.id}", inline=True)
 #    embed.add_field(name="Voice Channels", value=f'{nbr_vc}', inline=True)
 #    embed.add_field(name="Owner",value=f'{ctx.guild.owner}', inline=True)
