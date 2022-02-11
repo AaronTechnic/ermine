@@ -207,15 +207,14 @@ async def purge(ctx, amount : int):
 
 @client.command()
 async def help(ctx):
-    embed=discord.Embed(title="Help menu in development.",color=discord.Colour.red)
-#    embed.set_thumbnail(url=f"{ctx.guild.icon_url}")
-#    embed.add_field(name="Server created on", value=f"{created.strftime('%Y-%m-%d')}", inline=True)
-    embed.add_field(name="insert commands")
-#    embed.add_field(name="Identity", value=f"{ctx.guild.id}", inline=True)
-#    embed.add_field(name="Voice Channels", value=f'{nbr_vc}', inline=True)
-#    embed.add_field(name="Owner",value=f'{ctx.guild.owner}', inline=True)
-#    embed.add_field(name="Members",value=f'{nbr_member}', inline=True)
-#    embed.add_field(name=f'System Channel',value=f'{ctx.guild.system_channel}',inline=True)
+    embed=discord.Embed(title="Help menu in development.",color=0xe74c3c)
+    embed.set_thumbnail(url=ctx.guild.icon_url)
+    embed.add_field(name="Server created on", value=ctx.guild.created_at.strftime('%Y-%m-%d'), inline=True)
+    embed.add_field(name="Identity", value=ctx.guild.id, inline=True)
+    embed.add_field(name="Voice Channels", value=len(ctx.guild.voice_channels), inline=True)
+    embed.add_field(name="Owner",value=ctx.guild.owner, inline=True)
+    embed.add_field(name="Members",value=len(ctx.guild.members), inline=True)
+    embed.add_field(name=f'System Channel',value=ctx.guild.system_channel,inline=True)
     await ctx.send(embed=embed)
 
 # Bot token
